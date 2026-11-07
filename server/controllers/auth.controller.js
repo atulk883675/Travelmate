@@ -144,3 +144,51 @@ export const logout = (req, res) => {
         message: "Logged out successfully"
     });
 };
+
+
+export const getMe = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    return res.status(200).json({
+      success: true,
+      message: "User profile fetched successfully.",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profile: user.profile,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const logoutAll = async (req, res, next) => {
+  try {
+    // Increment tokenVersion to invalidate existing JWTs
+    req.user.tokenVersion += 1;
+
+    await req.user.save();
+
+    // Clear the current browser's authentication cookie
+    res.clearCookie("travelmate_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite:
+        process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out from all devices successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

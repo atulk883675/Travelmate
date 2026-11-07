@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import errorMiddleware from "./middleware/error.middleware.js";
+import tripRoutes from "./routes/trip.routes.js";
 
 const app = express();
 
@@ -34,5 +35,7 @@ app.use("/api/v1/auth", authRoutes);
 
 // Centralized error handling
 app.use(errorMiddleware);
+
+app.use("/api/v1/trips", tripRoutes);
 
 export default app;

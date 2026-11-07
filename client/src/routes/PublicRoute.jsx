@@ -1,0 +1,19 @@
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+const PublicRoute = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Checking authentication...</div>;
+  }
+
+  // Logged-in users should not revisit login/register
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
+};
+
+export default PublicRoute;

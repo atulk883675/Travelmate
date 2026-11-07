@@ -38,4 +38,5 @@ router.post("/logout", logout);
 router.get("/me", protect, getMe);
 
 router.post("/logout-all", protect, logoutAll);
+
 export default router;

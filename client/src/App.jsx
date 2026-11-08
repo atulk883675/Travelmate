@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -8,6 +9,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 
 import CreateTrip from "./pages/trips/CreateTrip";
+import TripDetails from "./pages/trips/TripDetails";
+
 
 function App() {
   return (
@@ -24,6 +27,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-trip" element={<CreateTrip />} />
+          <Route path="/trips/:tripId" element={<TripDetails />} />
         </Route>
 
         {/* Default route */}

@@ -17,3 +17,11 @@ export const generateTripItinerary = async (tripId) => {
 
   return response.data;
 };
+
+export const updateTripItinerary = async (tripId, itinerary) => {
+  const response = await api.put(`/itinerary/${tripId}`, {
+    itinerary
+  });
+
+  return response.data;
+};

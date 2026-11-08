@@ -1,25 +1,25 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import {
   getTripById,
   generateTripItinerary,
+  updateTripItinerary
 } from "../../services/tripservices";
 
 function TripDetails() {
   const { tripId } = useParams();
   const navigate = useNavigate();
 
-  // Store trip information
   const [trip, setTrip] = useState(null);
-
-  // Loading and error states
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [editedItinerary, setEditedItinerary] = useState([]);
   const [error, setError] = useState("");
 
-  // Fetch trip details from MongoDB
+  // Fetch trip details
   useEffect(() => {
     const fetchTrip = async () => {
       try {
@@ -27,8 +27,8 @@ function TripDetails() {
         setError("");
 
         const data = await getTripById(tripId);
-
         setTrip(data.trip);
+
       } catch (error) {
         console.error("Failed to fetch trip:", error);
 
@@ -36,6 +36,7 @@ function TripDetails() {
           error.response?.data?.message ||
           "Unable to load trip details."
         );
+
       } finally {
         setLoading(false);
       }
@@ -44,17 +45,19 @@ function TripDetails() {
     fetchTrip();
   }, [tripId]);
 
-  // Generate itinerary using Gemini AI
+  // Generate or regenerate itinerary
   const handleGenerateItinerary = async () => {
     try {
       setGenerating(true);
+      setEditing(false);
+      setEditedItinerary([]);
       setError("");
 
       const response = await generateTripItinerary(tripId);
 
       setTrip((prev) => ({
         ...prev,
-        itinerary: response.itinerary,
+        itinerary: response.itinerary
       }));
 
     } catch (error) {
@@ -64,26 +67,166 @@ function TripDetails() {
         error.response?.data?.message ||
         "Unable to generate itinerary."
       );
+
     } finally {
       setGenerating(false);
     }
   };
 
-  // Format date
+  // Start editing
+  const handleEditItinerary = () => {
+    setEditedItinerary(
+      JSON.parse(JSON.stringify(trip.itinerary))
+    );
+
+    setEditing(true);
+    setError("");
+  };
+
+  // Update activity fields
+  const handleActivityChange = (
+    dayIndex,
+    activityIndex,
+    field,
+    value
+  ) => {
+    const updated = [...editedItinerary];
+
+    updated[dayIndex] = {
+      ...updated[dayIndex],
+      activities: [...updated[dayIndex].activities]
+    };
+
+    updated[dayIndex].activities[activityIndex] = {
+      ...updated[dayIndex].activities[activityIndex],
+      [field]: value
+    };
+
+    setEditedItinerary(updated);
+  };
+
+  // Update day fields
+  const handleDayChange = (dayIndex, field, value) => {
+    const updated = [...editedItinerary];
+
+    updated[dayIndex] = {
+      ...updated[dayIndex],
+      [field]: value
+    };
+
+    setEditedItinerary(updated);
+  };
+
+  // Add new activity
+  const handleAddActivity = (dayIndex) => {
+    const updated = [...editedItinerary];
+
+    updated[dayIndex] = {
+      ...updated[dayIndex],
+      activities: [
+        ...updated[dayIndex].activities,
+        {
+          name: "",
+          description: "",
+          startTime: "12:00",
+          endTime: "13:00",
+          location: "",
+          estimatedCost: 0
+        }
+      ]
+    };
+
+    setEditedItinerary(updated);
+    setError("");
+  };
+
+  // Delete activity
+  const handleDeleteActivity = (dayIndex, activityIndex) => {
+    const updated = [...editedItinerary];
+
+    if (updated[dayIndex].activities.length === 1) {
+      setError(
+        "Each day must have at least one activity."
+      );
+      return;
+    }
+
+    updated[dayIndex] = {
+      ...updated[dayIndex],
+      activities: updated[dayIndex].activities.filter(
+        (_, index) => index !== activityIndex
+      )
+    };
+
+    setEditedItinerary(updated);
+    setError("");
+  };
+
+  // Save updated itinerary
+  const handleSaveItinerary = async () => {
+    try {
+      setSaving(true);
+      setError("");
+
+      const response = await updateTripItinerary(
+        tripId,
+        editedItinerary
+      );
+
+      setTrip((prev) => ({
+        ...prev,
+        itinerary: response.itinerary
+      }));
+
+      setEditedItinerary(response.itinerary);
+      setEditing(false);
+
+    } catch (error) {
+      console.error("Failed to save itinerary:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Unable to save itinerary."
+      );
+
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Cancel editing
+  const handleCancelEdit = () => {
+    setEditedItinerary([]);
+    setEditing(false);
+    setError("");
+  };
+
+  // Format dates
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-IN", {
       day: "numeric",
       month: "long",
-      year: "numeric",
+      year: "numeric"
     });
   };
 
-  // Loading screen
+  // Format date for HTML date input
+  const formatInputDate = (date) => {
+    const parsedDate = new Date(date);
+
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(parsedDate.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  // Loading state
   if (loading) {
     return <p>Loading trip details...</p>;
   }
 
-  // Error screen
+  // Error state
   if (error && !trip) {
     return (
       <div className="trip-details-page">
@@ -97,7 +240,6 @@ function TripDetails() {
     );
   }
 
-  // Trip not found
   if (!trip) {
     return <p>Trip not found.</p>;
   }
@@ -106,7 +248,10 @@ function TripDetails() {
     <div className="trip-details-page">
 
       {/* Back button */}
-      <button onClick={() => navigate("/dashboard")}>
+      <button
+        onClick={() => navigate("/dashboard")}
+        disabled={saving || generating}
+      >
         ← Back to Dashboard
       </button>
 
@@ -118,17 +263,11 @@ function TripDetails() {
           {trip.destination?.name}, {trip.destination?.country}
         </h2>
 
-        <p>
-          Starting Location: {trip.startingLocation}
-        </p>
+        <p>Starting Location: {trip.startingLocation}</p>
 
-        <p>
-          Start Date: {formatDate(trip.startDate)}
-        </p>
+        <p>Start Date: {formatDate(trip.startDate)}</p>
 
-        <p>
-          End Date: {formatDate(trip.endDate)}
-        </p>
+        <p>End Date: {formatDate(trip.endDate)}</p>
 
         <p>
           Travelers: {trip.travelers?.adults} Adults,{" "}
@@ -140,17 +279,11 @@ function TripDetails() {
           {trip.budgetPlan?.totalAmount?.toLocaleString("en-IN")}
         </p>
 
-        <p>
-          Travel Style: {trip.preferences?.travelStyle}
-        </p>
+        <p>Travel Style: {trip.preferences?.travelStyle}</p>
 
-        <p>
-          Travel Pace: {trip.preferences?.pace}
-        </p>
+        <p>Travel Pace: {trip.preferences?.pace}</p>
 
-        <p>
-          Status: {trip.status}
-        </p>
+        <p>Status: {trip.status}</p>
       </section>
 
       {/* Error message */}
@@ -160,25 +293,59 @@ function TripDetails() {
         </div>
       )}
 
-      {/* Generate itinerary */}
+      {/* Itinerary section */}
       <section className="itinerary-section">
 
+        {/* Heading and action buttons */}
         <div className="itinerary-heading">
+
           <h2>Your Travel Itinerary</h2>
 
-          <button
-            onClick={handleGenerateItinerary}
-            disabled={generating}
-          >
-            {generating
-              ? "Generating Itinerary..."
-              : trip.itinerary?.length > 0
-                ? "Regenerate Itinerary"
-                : "Generate Itinerary"}
-          </button>
+          {!editing ? (
+            <div>
+              <button
+                onClick={handleEditItinerary}
+                disabled={
+                  !trip.itinerary?.length ||
+                  generating ||
+                  saving
+                }
+              >
+                Edit Itinerary
+              </button>
+
+              <button
+                onClick={handleGenerateItinerary}
+                disabled={generating || saving}
+              >
+                {generating
+                  ? "Generating Itinerary..."
+                  : trip.itinerary?.length > 0
+                    ? "Regenerate Itinerary"
+                    : "Generate Itinerary"}
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button
+                onClick={handleSaveItinerary}
+                disabled={saving}
+              >
+                {saving ? "Saving..." : "Save Changes"}
+              </button>
+
+              <button
+                onClick={handleCancelEdit}
+                disabled={saving}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
         </div>
 
-        {/* Generation loading message */}
+        {/* Gemini loading message */}
         {generating && (
           <p>
             Gemini AI is preparing your personalized itinerary.
@@ -187,71 +354,267 @@ function TripDetails() {
         )}
 
         {/* Empty itinerary */}
-        {!generating && (!trip.itinerary || trip.itinerary.length === 0) && (
-          <div className="empty-itinerary">
-            <h3>No itinerary generated yet!</h3>
-            <p>
-              Click Generate Itinerary to plan your adventure
-              with TravelMate AI.
-            </p>
-          </div>
-        )}
+        {!generating &&
+          (!trip.itinerary || trip.itinerary.length === 0) && (
+            <div className="empty-itinerary">
+              <h3>No itinerary generated yet!</h3>
 
-        {/* Display generated itinerary */}
+              <p>
+                Click Generate Itinerary to plan your adventure
+                with TravelMate AI.
+              </p>
+            </div>
+          )}
+
+        {/* Display itinerary */}
         {!generating && trip.itinerary?.length > 0 && (
           <div className="itinerary-days">
 
-            {trip.itinerary.map((day) => (
-              <div
-                key={day._id || day.dayNumber}
-                className="itinerary-day"
-              >
-                <div className="itinerary-day-header">
-                  <h3>
-                    Day {day.dayNumber}: {day.title}
-                  </h3>
+            {(editing ? editedItinerary : trip.itinerary).map(
+              (day, dayIndex) => (
 
-                  <span>
-                    {formatDate(day.date)}
-                  </span>
+                <div
+                  key={day._id || day.dayNumber}
+                  className="itinerary-day"
+                >
+
+                  {/* Day header */}
+                  <div className="itinerary-day-header">
+                    <h3>Day {day.dayNumber}</h3>
+                  </div>
+
+                  {/* Day title, date and summary */}
+                  {editing ? (
+                    <>
+
+                      <label>Day Title</label>
+
+                      <input
+                        type="text"
+                        value={day.title}
+                        onChange={(e) =>
+                          handleDayChange(
+                            dayIndex,
+                            "title",
+                            e.target.value
+                          )
+                        }
+                        placeholder="Day title"
+                      />
+
+                      <label>Day Date</label>
+
+                      <input
+                        type="date"
+                        value={formatInputDate(day.date)}
+                        onChange={(e) =>
+                          handleDayChange(
+                            dayIndex,
+                            "date",
+                            e.target.value
+                          )
+                        }
+                      />
+
+                      <label>Day Summary</label>
+
+                      <textarea
+                        value={day.summary}
+                        onChange={(e) =>
+                          handleDayChange(
+                            dayIndex,
+                            "summary",
+                            e.target.value
+                          )
+                        }
+                        placeholder="Day summary"
+                      />
+
+                    </>
+                  ) : (
+                    <>
+
+                      <h3>{day.title}</h3>
+
+                      <span>
+                        {formatDate(day.date)}
+                      </span>
+
+                      <p className="day-summary">
+                        {day.summary}
+                      </p>
+
+                    </>
+                  )}
+
+                  {/* Activities list */}
+                  <div className="activities-list">
+
+                    {day.activities.map(
+                      (activity, activityIndex) => (
+
+                        <div
+                          key={activity._id || activityIndex}
+                          className="activity-card"
+                        >
+
+                          {editing ? (
+                            <>
+
+                              <label>Activity Name</label>
+
+                              <input
+                                type="text"
+                                value={activity.name}
+                                onChange={(e) =>
+                                  handleActivityChange(
+                                    dayIndex,
+                                    activityIndex,
+                                    "name",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Activity name"
+                              />
+
+                              <label>Description</label>
+
+                              <textarea
+                                value={activity.description}
+                                onChange={(e) =>
+                                  handleActivityChange(
+                                    dayIndex,
+                                    activityIndex,
+                                    "description",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Description"
+                              />
+
+                              <label>Start Time</label>
+
+                              <input
+                                type="time"
+                                value={activity.startTime}
+                                onChange={(e) =>
+                                  handleActivityChange(
+                                    dayIndex,
+                                    activityIndex,
+                                    "startTime",
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              <label>End Time</label>
+
+                              <input
+                                type="time"
+                                value={activity.endTime}
+                                onChange={(e) =>
+                                  handleActivityChange(
+                                    dayIndex,
+                                    activityIndex,
+                                    "endTime",
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              <label>Location</label>
+
+                              <input
+                                type="text"
+                                value={activity.location}
+                                onChange={(e) =>
+                                  handleActivityChange(
+                                    dayIndex,
+                                    activityIndex,
+                                    "location",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Location"
+                              />
+
+                              <label>Estimated Cost</label>
+
+                              <input
+                                type="number"
+                                min="0"
+                                value={activity.estimatedCost}
+                                onChange={(e) =>
+                                  handleActivityChange(
+                                    dayIndex,
+                                    activityIndex,
+                                    "estimatedCost",
+                                    Number(e.target.value)
+                                  )
+                                }
+                                placeholder="Estimated cost"
+                              />
+
+                              {/* Delete activity */}
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleDeleteActivity(
+                                    dayIndex,
+                                    activityIndex
+                                  )
+                                }
+                              >
+                                Delete Activity
+                              </button>
+
+                            </>
+                          ) : (
+                            <>
+
+                              <h4>{activity.name}</h4>
+
+                              <p>{activity.description}</p>
+
+                              <p>
+                                <strong>Time:</strong>{" "}
+                                {activity.startTime} - {activity.endTime}
+                              </p>
+
+                              <p>
+                                <strong>Location:</strong>{" "}
+                                {activity.location}
+                              </p>
+
+                              <p>
+                                <strong>Estimated Cost:</strong>{" "}
+                                {trip.budgetPlan?.currency}{" "}
+                                {activity.estimatedCost?.toLocaleString(
+                                  "en-IN"
+                                )}
+                              </p>
+
+                            </>
+                          )}
+
+                        </div>
+                      )
+                    )}
+
+                    {/* Add activity button */}
+                    {editing && (
+                      <button
+                        type="button"
+                        onClick={() => handleAddActivity(dayIndex)}
+                      >
+                        + Add Activity
+                      </button>
+                    )}
+
+                  </div>
                 </div>
-
-                <p className="day-summary">
-                  {day.summary}
-                </p>
-
-                <div className="activities-list">
-
-                  {day.activities.map((activity, index) => (
-                    <div
-                      key={activity._id || index}
-                      className="activity-card"
-                    >
-                      <h4>{activity.name}</h4>
-
-                      <p>{activity.description}</p>
-
-                      <p>
-                        <strong>Time:</strong>{" "}
-                        {activity.startTime} - {activity.endTime}
-                      </p>
-
-                      <p>
-                        <strong>Location:</strong>{" "}
-                        {activity.location}
-                      </p>
-
-                      <p>
-                        <strong>Estimated Cost:</strong>{" "}
-                        {trip.budgetPlan?.currency}{" "}
-                        {activity.estimatedCost?.toLocaleString("en-IN")}
-                      </p>
-                    </div>
-                  ))}
-
-                </div>
-              </div>
-            ))}
+              )
+            )}
 
           </div>
         )}

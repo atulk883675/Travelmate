@@ -381,3 +381,232 @@
   }
 }
 
+
+/* ============================= */
+/* TRIP DETAILS PAGE */
+/* ============================= */
+
+.trip-details-page {
+  min-height: 100vh;
+  padding: 35px 6%;
+  background: #f5f7fb;
+}
+
+.trip-details-page > button:first-child {
+  padding: 10px 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.trip-info {
+  background: white;
+  padding: 28px;
+  border-radius: 14px;
+  margin-bottom: 35px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+}
+
+.trip-info h1 {
+  font-size: 30px;
+  margin-bottom: 8px;
+  color: #172554;
+}
+
+.trip-info h2 {
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+.trip-info p {
+  margin: 10px 0;
+  color: #475569;
+}
+
+/* ============================= */
+/* ITINERARY SECTION */
+/* ============================= */
+
+.itinerary-section {
+  margin-top: 35px;
+}
+
+.itinerary-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.itinerary-heading h2 {
+  font-size: 26px;
+  color: #172554;
+}
+
+.itinerary-heading button {
+  padding: 12px 22px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.itinerary-heading button:hover {
+  background: #1d4ed8;
+}
+
+.itinerary-heading button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* EMPTY ITINERARY */
+/* ============================= */
+
+.empty-itinerary {
+  background: white;
+  padding: 45px 25px;
+  border-radius: 14px;
+  text-align: center;
+  color: #64748b;
+}
+
+.empty-itinerary h3 {
+  color: #172554;
+  margin-bottom: 10px;
+}
+
+/* ============================= */
+/* ITINERARY DAY CARDS */
+/* ============================= */
+
+.itinerary-days {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.itinerary-day {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+}
+
+.itinerary-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.itinerary-day-header h3 {
+  color: #1e3a8a;
+  font-size: 20px;
+}
+
+.itinerary-day-header span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.day-summary {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+/* ============================= */
+/* ACTIVITY CARDS */
+/* ============================= */
+
+.activities-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.activity-card {
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.activity-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+}
+
+.activity-card h4 {
+  color: #1e40af;
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.activity-card p {
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+.activity-card strong {
+  color: #1e293b;
+}
+
+/* ============================= */
+/* ERROR MESSAGE */
+/* ============================= */
+
+.trip-details-page .error-message {
+  padding: 14px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* ============================= */
+/* RESPONSIVE DESIGN */
+/* ============================= */
+
+@media (max-width: 768px) {
+  .trip-details-page {
+    padding: 20px 4%;
+  }
+
+  .itinerary-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .activities-list {
+    grid-template-columns: 1fr;
+  }
+
+  .trip-info {
+    padding: 20px;
+  }
+
+  .itinerary-day {
+    padding: 18px;
+  }
+
+  .itinerary-day-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

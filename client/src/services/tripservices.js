@@ -11,3 +11,9 @@ export const getTripById = async (tripId) => {
   const response = await api.get(`/trips/${tripId}`);
   return response.data;
 };
+
+export const generateTripItinerary = async (tripId) => {
+  const response = await api.post(`/itinerary/${tripId}/generate`);
+
+  return response.data;
+};

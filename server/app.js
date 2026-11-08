@@ -4,12 +4,14 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import tripRoutes from "./routes/trip.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
+import itineraryRoutes from "./routes/itinerary.routes.js";
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -37,5 +39,9 @@ app.use("/api/v1/auth", authRoutes);
 app.use(errorMiddleware);
 
 app.use("/api/v1/trips", tripRoutes);
+
+app.use("/api/v1/ai", aiRoutes);
+
+app.use("/api/v1/itinerary", itineraryRoutes);
 
 export default app;

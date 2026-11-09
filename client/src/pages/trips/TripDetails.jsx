@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { getTripBudget } from "../../services/budgetservices";
+import BudgetOverview from "../../components/trips/BudgetOverview";
+import ExpenseChart from "../../components/trips/ExpenseChart";
+import ExpenseForm from "../../components/trips/ExpenseForm";
+import ExpenseList from "../../components/trips/ExpenseList";
+import {
+  getTripExpenses,
+  deleteExpense,
+} from "../../services/expenseservices";
 
 import {
   getTripById,
@@ -18,6 +27,17 @@ function TripDetails() {
   const [saving, setSaving] = useState(false);
   const [editedItinerary, setEditedItinerary] = useState([]);
   const [error, setError] = useState("");
+
+  const [budget, setBudget] = useState(null);
+  const [budgetLoading, setBudgetLoading] = useState(true);
+  const [budgetError, setBudgetError] = useState("");
+
+  const [expenses, setExpenses] = useState([]);
+  const [expensesLoading, setExpensesLoading] = useState(true);
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null); 
+
+  const [expenseMessage, setExpenseMessage] = useState("");
 
   // Fetch trip details
   useEffect(() => {
@@ -43,6 +63,18 @@ function TripDetails() {
     };
 
     fetchTrip();
+  }, [tripId]);
+
+  useEffect(() => {
+   if (tripId) {
+    fetchBudget();
+   }
+  }, [tripId]);
+
+  useEffect(() => {
+   if (tripId) {
+    fetchExpenses();
+   }
   }, [tripId]);
 
   // Generate or regenerate itinerary
@@ -201,6 +233,65 @@ function TripDetails() {
     setError("");
   };
 
+  const fetchBudget = async () => {
+  try {
+    setBudgetLoading(true);
+    setBudgetError("");
+
+    const response = await getTripBudget(tripId);
+
+    setBudget(response.budget);
+  } catch (error) {
+    console.error("Budget fetch error:", error);
+
+    setBudgetError(
+      error.response?.data?.message ||
+      "Failed to load budget information."
+    );
+  } finally {
+    setBudgetLoading(false);
+  }
+  };
+
+  const fetchExpenses = async () => {
+  try {
+    setExpensesLoading(true);
+
+    const response = await getTripExpenses(tripId);
+
+    setExpenses(response.expenses);
+  } catch (error) {
+    console.error("Fetch Expenses Error:", error);
+  } finally {
+    setExpensesLoading(false);
+  }
+  };
+
+  const refreshExpenseData = async () => {
+  await Promise.all([
+    fetchExpenses(),
+    fetchBudget(),
+  ]);
+  };
+
+  const handleDeleteExpense = async (expenseId) => {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this expense?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await deleteExpense(tripId, expenseId);
+    await refreshExpenseData();
+
+    setExpenseMessage("Expense deleted successfully!");
+  } catch (error) {
+    console.error("Delete Expense Error:", error);
+    setExpenseMessage("Failed to delete expense.");
+  }
+  };
+
   // Format dates
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-IN", {
@@ -292,6 +383,73 @@ function TripDetails() {
           {error}
         </div>
       )}
+
+      <BudgetOverview
+        budget={budget}
+        loading={budgetLoading}
+        error={budgetError}
+      />
+
+      <ExpenseChart
+        categoryBreakdown={budget?.categoryBreakdown}
+        currency={budget?.currency || "INR"}
+      />
+
+      {/* Expense Management */}
+      <section className="expense-management-section">
+
+      {expenseMessage && (
+       <p className="expense-message">
+       {expenseMessage}
+       </p>
+      )}  
+
+      <div className="expense-management-heading">
+      <h2>Manage Expenses</h2>
+
+      <button
+      type="button"
+      onClick={() => setShowExpenseForm(!showExpenseForm)}
+      >
+      {showExpenseForm ? "Close Form" : "+ Add Expense"}
+      </button>
+      </div>
+
+      {showExpenseForm && (
+       <ExpenseForm
+        tripId={tripId}
+        expense={selectedExpense}
+        onExpenseAdded={async () => {
+         await refreshExpenseData();
+
+         setExpenseMessage(
+         selectedExpense
+         ? "Expense updated successfully!"
+         : "Expense added successfully!"
+         );
+
+         setShowExpenseForm(false);
+         setSelectedExpense(null);
+         }}
+         onCancel={() => {
+         setShowExpenseForm(false);
+         setSelectedExpense(null);
+         }}
+        />
+      )}
+
+      <ExpenseList
+       expenses={expenses}
+       loading={expensesLoading}
+       onEdit={(expense) => {
+        setSelectedExpense(expense);
+        setShowExpenseForm(true);
+       }}
+       onDelete={handleDeleteExpense}
+       currency={budget?.currency || "INR"}
+      />
+
+      </section>
 
       {/* Itinerary section */}
       <section className="itinerary-section">

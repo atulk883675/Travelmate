@@ -610,3 +610,138 @@
     flex-direction: column;
   }
 }
+
+/* Budget Overview */
+.budget-overview {
+  margin: 30px 0;
+  padding: 24px;
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.budget-overview h2,
+.budget-overview h3,
+.budget-overview h4 {
+  color: #111827;
+}
+
+.budget-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.budget-card {
+  padding: 18px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.budget-card h4 {
+  margin-bottom: 10px;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.budget-card h2 {
+  color: #111827;
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+
+.budget-progress-section {
+  margin-top: 25px;
+}
+
+.budget-progress-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #111827;
+}
+
+.budget-progress-track {
+  width: 100%;
+  height: 12px;
+  margin: 12px 0;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 20px;
+}
+
+.budget-progress-fill {
+  height: 100%;
+  background: #16a34a;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.budget-progress-fill.over-budget {
+  background: #dc2626;
+}
+
+.budget-progress-section p {
+  color: #4b5563;
+  font-size: 14px;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .budget-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .budget-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Expense Summary */
+
+.expense-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.expense-summary-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px;
+  color: #1f2937;
+}
+
+.expense-summary-card h4 {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.expense-summary-card h2 {
+  color: #111827;
+  font-size: 24px;
+}
+
+@media (max-width: 480px) {
+  .expense-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+.expense-message {
+  padding: 12px 16px;
+  margin: 12px 0;
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  font-weight: 500;
+}

@@ -6,6 +6,8 @@ import errorMiddleware from "./middleware/error.middleware.js";
 import tripRoutes from "./routes/trip.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import itineraryRoutes from "./routes/itinerary.routes.js";
+import expenseRoutes from "./routes/expense.routes.js";
+import budgetRoutes from "./routes/budget.routes.js";
 
 const app = express();
 
@@ -43,5 +45,9 @@ app.use("/api/v1/trips", tripRoutes);
 app.use("/api/v1/ai", aiRoutes);
 
 app.use("/api/v1/itinerary", itineraryRoutes);
+
+app.use("/api/v1/expenses", expenseRoutes);
+
+app.use("/api/v1/budget", budgetRoutes);
 
 export default app;

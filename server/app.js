@@ -8,6 +8,9 @@ import aiRoutes from "./routes/ai.routes.js";
 import itineraryRoutes from "./routes/itinerary.routes.js";
 import expenseRoutes from "./routes/expense.routes.js";
 import budgetRoutes from "./routes/budget.routes.js";
+import mapsRoutes from "./routes/maps.routes.js";
+import routingRoutes from "./routes/routing.routes.js";
+import weatherRoutes from "./routes/weather.routes.js";
 
 const app = express();
 
@@ -49,5 +52,11 @@ app.use("/api/v1/itinerary", itineraryRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
 
 app.use("/api/v1/budget", budgetRoutes);
+
+app.use("/api/v1/maps", mapsRoutes);
+
+app.use("/api/v1/maps/route", routingRoutes);
+
+app.use("/api/v1/weather", weatherRoutes);
 
 export default app;

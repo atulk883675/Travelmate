@@ -11,6 +11,8 @@ import PublicRoute from "./routes/PublicRoute";
 import CreateTrip from "./pages/trips/CreateTrip";
 import TripDetails from "./pages/trips/TripDetails";
 
+import DestinationExplorer from "./pages/trips/DestinationExplorer";
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-trip" element={<CreateTrip />} />
           <Route path="/trips/:tripId" element={<TripDetails />} />
+          <Route path="/explore" element={<DestinationExplorer />} />
         </Route>
 
         {/* Default route */}

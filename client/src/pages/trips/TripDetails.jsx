@@ -16,6 +16,12 @@ import {
   updateTripItinerary
 } from "../../services/tripservices";
 
+import TravelAssistant from "../../components/assistant/TravelAssistant";
+
+import {
+  applyAssistantChanges as applyAssistantChangesRequest,
+} from "../../services/assistantservices";
+
 function TripDetails() {
   const { tripId } = useParams();
   const navigate = useNavigate();
@@ -38,6 +44,9 @@ function TripDetails() {
   const [selectedExpense, setSelectedExpense] = useState(null); 
 
   const [expenseMessage, setExpenseMessage] = useState("");
+
+  const [assistantApplying, setAssistantApplying] = useState(false);
+  const [assistantApplyMessage, setAssistantApplyMessage] = useState("");
 
   // Fetch trip details
   useEffect(() => {
@@ -231,6 +240,43 @@ function TripDetails() {
     setEditedItinerary([]);
     setEditing(false);
     setError("");
+  };
+
+  const handleApplyAssistantChanges = async (proposedItinerary) => {
+  try {
+    setAssistantApplying(true);
+    setAssistantApplyMessage("");
+
+    const response = await applyAssistantChangesRequest(
+      tripId,
+      proposedItinerary
+    );
+
+    // Update the displayed itinerary with the saved version
+    setTrip((prev) => ({
+      ...prev,
+      itinerary: response.itinerary,
+    }));
+
+    setAssistantApplyMessage(
+      "AI itinerary changes applied successfully!"
+    );
+
+    return true;
+
+  } catch (error) {
+    console.error("Failed to apply AI changes:", error);
+
+    setAssistantApplyMessage(
+      error.response?.data?.message ||
+      "Unable to apply AI itinerary changes."
+    );
+
+    return false;
+
+  } finally {
+    setAssistantApplying(false);
+  }
   };
 
   const fetchBudget = async () => {
@@ -450,6 +496,14 @@ function TripDetails() {
       />
 
       </section>
+
+      {/* AI Travel Assistant */}
+      <TravelAssistant
+       tripId={tripId}
+       onApplyChanges={handleApplyAssistantChanges}
+       applying={assistantApplying}
+       applyMessage={assistantApplyMessage}
+      />
 
       {/* Itinerary section */}
       <section className="itinerary-section">

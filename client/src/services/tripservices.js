@@ -25,3 +25,10 @@ export const updateTripItinerary = async (tripId, itinerary) => {
 
   return response.data;
 };
+
+// Delete a trip
+export const deleteTrip = async (tripId) => {
+  const response = await api.delete(`/trips/${tripId}`);
+
+  return response.data;
+};

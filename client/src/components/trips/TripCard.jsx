@@ -1,7 +1,33 @@
 import { useNavigate } from "react-router-dom";
+import { deleteTrip } from "../../services/tripservices";
 
-function TripCard({ trip }) {
+function TripCard({ trip, onDelete }) {
   const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${trip.title}"? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteTrip(trip._id);
+
+      alert("Trip deleted successfully!");
+
+      if (onDelete) {
+        onDelete(trip._id);
+      }
+    } catch (error) {
+      console.error("Failed to delete trip:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Unable to delete trip. Please try again."
+      );
+    }
+  };
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-IN", {
@@ -52,8 +78,15 @@ function TripCard({ trip }) {
         <button
           type="button"
           onClick={() => navigate(`/trips/${trip._id}`)}
-         >
-         View Details
+        >
+          View Details
+        </button>
+
+        <button
+          type="button"
+          onClick={handleDelete}
+        >
+          Delete Trip
         </button>
       </div>
 

@@ -13,6 +13,7 @@ import routingRoutes from "./routes/routing.routes.js";
 import weatherRoutes from "./routes/weather.routes.js";
 import destinationRoutes from "./routes/destination.routes.js";
 import nearbyRoutes from "./routes/nearby.routes.js";
+import assistantRoutes from "./routes/assistant.routes.js";
 
 const app = express();
 
@@ -64,5 +65,7 @@ app.use("/api/v1/weather", weatherRoutes);
 app.use("/api/v1/destinations", destinationRoutes);
 
 app.use("/api/v1/nearby", nearbyRoutes);
+
+app.use("/api/v1/assistant", assistantRoutes);
 
 export default app;

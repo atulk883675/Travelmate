@@ -72,15 +72,25 @@ function Dashboard() {
 
       {/* Header */}
       <header className="dashboard-header">
-        <div>
-          <h1>Welcome, {user?.name || "Traveler"}!</h1>
-          <p>{user?.email}</p>
-        </div>
+  <div>
+    <h1>Welcome, {user?.name || "Traveler"}!</h1>
+    <p>{user?.email}</p>
+  </div>
 
-        <button onClick={logout}>
-          Logout
-        </button>
-      </header>
+  <div className="dashboard-header-actions">
+    <button
+      onClick={() => {
+        window.location.href = "/destinations";
+      }}
+    >
+      Explore Destinations
+    </button>
+
+    <button onClick={logout}>
+      Logout
+    </button>
+  </div>
+</header>
 
       {/* Trips Section */}
       <section className="dashboard-trips">

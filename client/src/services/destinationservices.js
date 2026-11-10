@@ -38,3 +38,10 @@ export const getSavedDestinations = async () => {
   const response = await api.get("/destinations/saved");
   return response.data;
 };
+
+
+export const getDestinationById = async (destinationId) => {
+  const response = await api.get(`/destinations/${destinationId}`);
+  return response.data;
+};
+

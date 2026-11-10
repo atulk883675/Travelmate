@@ -188,7 +188,12 @@ const StateDestinations = () => {
                     {destination.category}
                   </span>
 
-                  <h3>{destination.name}</h3>
+                  <h3
+                    onClick={() => navigate(`/destination/${destination._id}`)}
+                    style={{ cursor: "pointer" }}
+                    >
+                    {destination.name}
+                  </h3>
 
                   <button
                    className="save-destination-button"
@@ -209,6 +214,12 @@ const StateDestinations = () => {
                   </button>
 
                   <p>{destination.description}</p>
+
+                  <button
+                   onClick={() => navigate(`/destination/${destination._id}`)}
+                   >
+                   View Details
+                  </button>
 
                   <div className="destination-best-time">
                     <strong>Best time to visit:</strong>

@@ -11,6 +11,7 @@ import budgetRoutes from "./routes/budget.routes.js";
 import mapsRoutes from "./routes/maps.routes.js";
 import routingRoutes from "./routes/routing.routes.js";
 import weatherRoutes from "./routes/weather.routes.js";
+import destinationRoutes from "./routes/destination.routes.js";
 
 const app = express();
 
@@ -58,5 +59,7 @@ app.use("/api/v1/maps", mapsRoutes);
 app.use("/api/v1/maps/route", routingRoutes);
 
 app.use("/api/v1/weather", weatherRoutes);
+
+app.use("/api/v1/destinations", destinationRoutes);
 
 export default app;

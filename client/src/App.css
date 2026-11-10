@@ -745,3 +745,249 @@
   border-radius: 8px;
   font-weight: 500;
 }
+
+
+/* =====================================
+   STATE EXPLORER
+===================================== */
+
+.state-explorer {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 6%;
+  background: #f8fafc;
+  color: #172033;
+}
+
+/* Hero Section */
+
+.state-explorer-header {
+  text-align: center;
+  padding: 65px 20px 55px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #e0f2fe, #eef2ff, #f5f3ff);
+  margin-bottom: 45px;
+}
+
+.explorer-tag {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: #ffffff;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 18px;
+}
+
+.state-explorer-header h1 {
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 800;
+  margin: 0 0 15px;
+  color: #172554;
+}
+
+.state-explorer-header p {
+  font-size: 16px;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+
+/* Search Bar */
+
+.state-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 550px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+  color: #64748b;
+}
+
+.state-search:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.state-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  color: #172033;
+}
+
+/* Results Heading */
+
+.region-results-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.region-results-info h2 {
+  font-size: 25px;
+  font-weight: 750;
+  color: #172033;
+  margin: 0;
+}
+
+.region-results-info span {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* Regions Grid */
+
+.regions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Region Card */
+
+.region-card {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding: 23px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 17px;
+  cursor: pointer;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease,
+              border-color 0.25s ease;
+}
+
+.region-card:hover {
+  transform: translateY(-5px);
+  border-color: #93c5fd;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.10);
+}
+
+.region-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.region-card-content {
+  min-width: 0;
+}
+
+.region-card-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 7px;
+  overflow-wrap: anywhere;
+}
+
+.region-card-content p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Loading, Error and Empty States */
+
+.explorer-status {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  text-align: center;
+  color: #64748b;
+}
+
+.explorer-status.error {
+  color: #dc2626;
+}
+
+.explorer-status button {
+  border: none;
+  border-radius: 9px;
+  padding: 11px 20px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.spinner {
+  animation: explorer-spin 1s linear infinite;
+}
+
+@keyframes explorer-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .regions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .state-explorer {
+    padding: 30px 4%;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .state-explorer {
+    padding: 20px 16px;
+  }
+
+  .state-explorer-header {
+    padding: 45px 16px;
+    border-radius: 18px;
+  }
+
+  .state-explorer-header p {
+    font-size: 14px;
+  }
+
+  .regions-grid {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .region-card {
+    padding: 18px;
+  }
+
+  .region-results-info {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .region-results-info h2 {
+    font-size: 22px;
+  }
+}

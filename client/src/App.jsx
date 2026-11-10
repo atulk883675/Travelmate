@@ -13,6 +13,10 @@ import TripDetails from "./pages/trips/TripDetails";
 
 import DestinationExplorer from "./pages/trips/DestinationExplorer";
 
+import StateExplorer from "./pages/destinations/StateExplorer";
+import StateDestinations from "./pages/destinations/StateDestinations";
+import SavedDestinations from "./pages/destinations/SavedDestinations";
+
 
 function App() {
   return (
@@ -31,6 +35,9 @@ function App() {
           <Route path="/create-trip" element={<CreateTrip />} />
           <Route path="/trips/:tripId" element={<TripDetails />} />
           <Route path="/explore" element={<DestinationExplorer />} />
+          <Route path="/destinations" element={<StateExplorer />} />
+          <Route path="/destinations/:state" element={<StateDestinations />} />
+          <Route path="/saved-destinations" element={<SavedDestinations />}/>
         </Route>
 
         {/* Default route */}

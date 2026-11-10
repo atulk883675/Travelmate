@@ -18,6 +18,7 @@ import {
 
 import DestinationMap from "../../components/trips/DestinationMap";
 import WeatherCard from "../../components/trips/WeatherCard";
+import NearbyAttractions from "../../components/attractions/NearbyAttractions";
 
 const DestinationDetails = () => {
   const { destinationId } = useParams();
@@ -183,6 +184,11 @@ const DestinationDetails = () => {
          destination={destination.name}
          />
         </div>
+
+        <NearbyAttractions
+         latitude={destination.latitude}
+         longitude={destination.longitude}
+        />
 
         <button
           className="save-destination-button"

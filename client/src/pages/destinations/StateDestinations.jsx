@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   ArrowLeft,
   MapPin,
@@ -19,13 +20,21 @@ const StateDestinations = () => {
   const { state } = useParams();
   const navigate = useNavigate();
 
+  // Destination states
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Saved destination states
   const [savedIds, setSavedIds] = useState([]);
   const [savingId, setSavingId] = useState(null);
 
+  // Search and filter states
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortOrder, setSortOrder] = useState("az");
+
+  // Fetch destinations and saved destinations
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
@@ -40,20 +49,23 @@ const StateDestinations = () => {
 
         // Fetch destinations already saved by the user
         try {
-         const savedData = await getSavedDestinations();
+          const savedData = await getSavedDestinations();
 
-         const saved = savedData.destinations || [];
+          const saved = savedData.destinations || [];
 
-         setSavedIds(
-           saved.map((destination) =>
-           typeof destination === "string"
-           ? destination
-           : destination._id
-           )
-         );
+          setSavedIds(
+            saved.map((destination) =>
+              typeof destination === "string"
+                ? destination
+                : destination._id
+            )
+          );
         } catch (savedError) {
-          console.error("Error fetching saved destinations:", savedError);
-        } 
+          console.error(
+            "Error fetching saved destinations:",
+            savedError
+          );
+        }
       } catch (err) {
         console.error("Error fetching destinations:", err);
 
@@ -69,36 +81,61 @@ const StateDestinations = () => {
     fetchDestinations();
   }, [state]);
 
+  // Search and category filtering
+  const filteredDestinations = destinations
+   .filter((destination) => {
+    const destinationName = String(destination.name || "");
+
+    const matchesSearch = destinationName
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === "all" ||
+      destination.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+   })
+   .sort((a, b) => {
+    const nameA = String(a.name || "");
+    const nameB = String(b.name || "");
+
+    return sortOrder === "az"
+      ? nameA.localeCompare(nameB)
+      : nameB.localeCompare(nameA);
+  });
+
+  // Save or unsave destination
   const handleSaveToggle = async (destinationId) => {
-  try {
-    setSavingId(destinationId);
+    try {
+      setSavingId(destinationId);
 
-    const isSaved = savedIds.includes(destinationId);
+      const isSaved = savedIds.includes(destinationId);
 
-    if (isSaved) {
-      await removeSavedDestination(destinationId);
+      if (isSaved) {
+        await removeSavedDestination(destinationId);
 
-      setSavedIds((previous) =>
-        previous.filter((id) => id !== destinationId)
+        setSavedIds((previous) =>
+          previous.filter((id) => id !== destinationId)
+        );
+      } else {
+        await saveDestination(destinationId);
+
+        setSavedIds((previous) => [
+          ...previous,
+          destinationId,
+        ]);
+      }
+    } catch (error) {
+      console.error("Error updating saved destination:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Unable to update saved destination."
       );
-    } else {
-      await saveDestination(destinationId);
-
-      setSavedIds((previous) => [
-        ...previous,
-        destinationId,
-      ]);
+    } finally {
+      setSavingId(null);
     }
-  } catch (error) {
-    console.error("Error updating saved destination:", error);
-
-    alert(
-      error.response?.data?.message ||
-      "Unable to update saved destination."
-    );
-  } finally {
-    setSavingId(null);
-  }
   };
 
   return (
@@ -127,7 +164,7 @@ const StateDestinations = () => {
         </p>
       </div>
 
-      {/* Loading */}
+      {/* Loading State */}
       {loading && (
         <div className="explorer-status">
           <Loader2 className="spinner" size={32} />
@@ -135,7 +172,7 @@ const StateDestinations = () => {
         </div>
       )}
 
-      {/* Error */}
+      {/* Error State */}
       {!loading && error && (
         <div className="explorer-status error">
           <p>{error}</p>
@@ -153,83 +190,165 @@ const StateDestinations = () => {
         </div>
       )}
 
-      {/* Destination Cards */}
+      {/* Destination Section */}
       {!loading && !error && destinations.length > 0 && (
         <>
+          {/* Section Heading */}
           <div className="region-results-info">
             <h2>Popular Destinations</h2>
 
             <span>
+              {filteredDestinations.length} of{" "}
               {destinations.length} places found
             </span>
           </div>
 
-          <div className="destination-grid">
-            {destinations.map((destination) => (
-              <div
-                className="destination-card"
-                key={destination._id}
-              >
-                {destination.imageUrl ? (
-                  <img
-                    src={destination.imageUrl}
-                    alt={destination.name}
-                    className="destination-card-image"
-                  />
-                ) : (
-                  <div className="destination-image-placeholder">
-                    <MapPin size={35} />
-                  </div>
-                )}
+          {/* Search and Category Filters */}
+          <div className="destination-filters">
 
-                <div className="destination-card-content">
+            {/* Search */}
+            <input
+              type="text"
+              placeholder="Search destinations..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-                  <span className="destination-category">
-                    {destination.category}
-                  </span>
+            {/* Category Dropdown */}
+            <select
+              value={selectedCategory}
+              onChange={(e) =>
+                setSelectedCategory(e.target.value)
+              }
+            >
+              <option value="all">All Categories</option>
+              <option value="mountain">Mountain</option>
+              <option value="beach">Beach</option>
+              <option value="city">City</option>
+              <option value="historical">Historical</option>
+              <option value="nature">Nature</option>
+              <option value="adventure">Adventure</option>
+            </select>
 
-                  <h3
-                    onClick={() => navigate(`/destination/${destination._id}`)}
-                    style={{ cursor: "pointer" }}
-                    >
-                    {destination.name}
-                  </h3>
+            {/* Sorting Dropdown */}
+            <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            >
+            <option value="az">Name: A–Z</option>
+            <option value="za">Name: Z–A</option>
+            </select> 
 
-                  <button
-                   className="save-destination-button"
-                   onClick={() => handleSaveToggle(destination._id)}
-                   disabled={savingId === destination._id}
-                   >
-                   {savedIds.includes(destination._id) ? (
-                   <>
-                   <BookmarkCheck size={18} />
-                   Saved
-                   </>
-                   ) : (
-                   <>
-                   <Bookmark size={18} />
-                   Save
-                   </>
-                   )}
-                  </button>
-
-                  <p>{destination.description}</p>
-
-                  <button
-                   onClick={() => navigate(`/destination/${destination._id}`)}
-                   >
-                   View Details
-                  </button>
-
-                  <div className="destination-best-time">
-                    <strong>Best time to visit:</strong>
-                    <span>{destination.bestTimeToVisit}</span>
-                  </div>
-
-                </div>
-              </div>
-            ))}
           </div>
+
+          {/* No Matching Destinations */}
+          {filteredDestinations.length === 0 ? (
+            <div className="explorer-status">
+              <h3>No matching destinations found</h3>
+
+              <p>
+                Try changing your search or category.
+              </p>
+            </div>
+          ) : (
+
+            /* Destination Cards */
+            <div className="destination-grid">
+
+              {filteredDestinations.map((destination) => (
+                <div
+                  className="destination-card"
+                  key={destination._id}
+                >
+
+                  {/* Destination Image */}
+                  {destination.imageUrl ? (
+                    <img
+                      src={destination.imageUrl}
+                      alt={destination.name}
+                      className="destination-card-image"
+                    />
+                  ) : (
+                    <div className="destination-image-placeholder">
+                      <MapPin size={35} />
+                    </div>
+                  )}
+
+                  <div className="destination-card-content">
+
+                    {/* Category */}
+                    <span className="destination-category">
+                      {destination.category}
+                    </span>
+
+                    {/* Destination Name */}
+                    <h3
+                      onClick={() =>
+                        navigate(
+                          `/destination/${destination._id}`
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      {destination.name}
+                    </h3>
+
+                    {/* Save / Unsave Button */}
+                    <button
+                      className="save-destination-button"
+                      onClick={() =>
+                        handleSaveToggle(destination._id)
+                      }
+                      disabled={savingId === destination._id}
+                    >
+                      {savingId === destination._id ? (
+                        <Loader2
+                          size={18}
+                          className="spinner"
+                        />
+                      ) : savedIds.includes(destination._id) ? (
+                        <>
+                          <BookmarkCheck size={18} />
+                          Saved
+                        </>
+                      ) : (
+                        <>
+                          <Bookmark size={18} />
+                          Save
+                        </>
+                      )}
+                    </button>
+
+                    {/* Description */}
+                    <p>{destination.description}</p>
+
+                    {/* View Details */}
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/destination/${destination._id}`
+                        )
+                      }
+                    >
+                      View Details
+                    </button>
+
+                    {/* Best Time to Visit */}
+                    <div className="destination-best-time">
+                      <strong>Best time to visit:</strong>
+
+                      <span>
+                        {destination.bestTimeToVisit}
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          )}
+
         </>
       )}
 

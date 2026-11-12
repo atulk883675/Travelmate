@@ -1,18 +1,25 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   ArrowLeft,
+  ArrowRight,
   BookmarkCheck,
   MapPin,
   Loader2,
   Trash2,
+  Compass,
+  CalendarDays,
+  RefreshCw,
+  Mountain,
 } from "lucide-react";
 
 import {
   getSavedDestinations,
   removeSavedDestination,
 } from "../../services/destinationservices";
+
+import "./SavedDestinations.css";
 
 const SavedDestinations = () => {
   const navigate = useNavigate();
@@ -70,112 +77,250 @@ const SavedDestinations = () => {
   };
 
   return (
-    <div className="state-explorer">
+    <div className="saved-destinations-page">
+
+      {/* Back navigation */}
       <button
-        className="back-button"
+        className="sv-back-button"
         onClick={() => navigate("/destinations")}
       >
-        <ArrowLeft size={18} />
+        <ArrowLeft size={17} />
         Explore States
       </button>
 
-      <div className="state-explorer-header">
-        <span className="explorer-tag">YOUR COLLECTION</span>
-        <h1>Saved Destinations</h1>
-        <p>
-          All your bookmarked destinations, together in one place.
-        </p>
-      </div>
+      {/* Hero section */}
+      <section className="sv-hero">
+        <div className="sv-hero-decoration sv-decoration-one" />
+        <div className="sv-hero-decoration sv-decoration-two" />
 
+        <div className="sv-hero-content">
+          <span className="sv-eyebrow">
+            <BookmarkCheck size={15} />
+            YOUR PERSONAL COLLECTION
+          </span>
+
+          <h1>Saved Destinations</h1>
+
+          <p>
+            Your travel wishlist, all in one place.
+            Keep track of the places you dream of visiting
+            and start planning your next adventure.
+          </p>
+
+          {!loading && !error && (
+            <div className="sv-hero-stat">
+              <BookmarkCheck size={17} />
+              <strong>{destinations.length}</strong>
+              <span>
+                {destinations.length === 1
+                  ? "Place saved"
+                  : "Places saved"}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="sv-hero-art">
+          <div className="sv-bookmark-circle">
+            <Compass size={66} strokeWidth={1.2} />
+          </div>
+
+          <span className="sv-floating-bookmark">
+            <BookmarkCheck size={22} />
+          </span>
+        </div>
+      </section>
+
+      {/* Loading state */}
       {loading && (
-        <div className="explorer-status">
-          <Loader2 className="spinner" size={32} />
-          <p>Loading saved destinations...</p>
+        <div className="sv-status">
+          <Loader2 size={34} className="sv-spinner" />
+          <h3>Loading your collection...</h3>
+          <p>Gathering your saved travel destinations.</p>
         </div>
       )}
 
+      {/* Error state */}
       {!loading && error && (
-        <div className="explorer-status error">
+        <div className="sv-status sv-error-state">
+          <div className="sv-status-icon">
+            <BookmarkCheck size={28} />
+          </div>
+
+          <h3>Couldn't load your collection</h3>
           <p>{error}</p>
-          <button onClick={() => window.location.reload()}>
+
+          <button
+            className="sv-primary-button"
+            onClick={() => window.location.reload()}
+          >
+            <RefreshCw size={16} />
             Try Again
           </button>
         </div>
       )}
 
+      {/* Empty state */}
       {!loading && !error && destinations.length === 0 && (
-        <div className="explorer-status">
-          <BookmarkCheck size={40} />
+        <div className="sv-empty-state">
+          <div className="sv-empty-art">
+            <BookmarkCheck size={43} />
+            <span>
+              <MapPin size={19} />
+            </span>
+          </div>
+
+          <span className="sv-section-kicker">
+            YOUR NEXT ADVENTURE STARTS HERE
+          </span>
+
           <h2>No saved destinations yet</h2>
-          <p>Explore India and bookmark places you want to visit.</p>
-          <button onClick={() => navigate("/destinations")}>
+
+          <p>
+            You haven't bookmarked any places. Explore India,
+            discover amazing destinations and save the ones
+            you'd love to visit.
+          </p>
+
+          <button
+            className="sv-primary-button"
+            onClick={() => navigate("/destinations")}
+          >
             Explore Destinations
+            <ArrowRight size={17} />
           </button>
         </div>
       )}
 
+      {/* Saved destinations */}
       {!loading && !error && destinations.length > 0 && (
-        <>
-          <div className="region-results-info">
-            <h2>Your Bookmarks</h2>
-            <span>{destinations.length} places saved</span>
+        <section className="sv-collection-section">
+
+          <div className="sv-section-heading">
+            <div>
+              <span className="sv-section-kicker">
+                PLACES YOU LOVE
+              </span>
+
+              <h2>Your Travel Wishlist</h2>
+
+              <p>
+                All the destinations you've bookmarked for future adventures.
+              </p>
+            </div>
+
+            <span className="sv-results-count">
+              {destinations.length}{" "}
+              {destinations.length === 1 ? "PLACE" : "PLACES"}
+            </span>
           </div>
 
-          <div className="destination-grid">
-            {destinations.map((destination) => (
-              <div
-                className="destination-card"
-                key={destination._id}
-              >
-                {destination.imageUrl ? (
-                  <img
-                    src={destination.imageUrl}
-                    alt={destination.name}
-                    className="destination-card-image"
-                  />
-                ) : (
-                  <div className="destination-image-placeholder">
-                    <MapPin size={35} />
-                  </div>
-                )}
+          <div className="sv-destination-grid">
+            {destinations.map((destination) => {
+              const isRemoving = removingId === destination._id;
 
-                <div className="destination-card-content">
-                  <span className="destination-category">
-                    {destination.category}
-                  </span>
-
-                  <h3>{destination.name}</h3>
-
-                  <p>{destination.description}</p>
-
-                  <div className="destination-best-time">
-                    <strong>State:</strong>
-                    <span>{destination.state}</span>
-                  </div>
-
-                  <div className="destination-best-time">
-                    <strong>Best time to visit:</strong>
-                    <span>{destination.bestTimeToVisit}</span>
-                  </div>
-
-                  <button
-                    className="save-destination-button"
-                    onClick={() => handleRemove(destination._id)}
-                    disabled={removingId === destination._id}
-                  >
-                    {removingId === destination._id ? (
-                      <Loader2 size={18} className="spinner" />
+              return (
+                <article
+                  className="sv-destination-card"
+                  key={destination._id}
+                >
+                  {/* Destination image */}
+                  <div className="sv-card-image-wrapper">
+                    {destination.imageUrl ? (
+                      <img
+                        src={destination.imageUrl}
+                        alt={destination.name}
+                        className="sv-card-image"
+                      />
                     ) : (
-                      <Trash2 size={18} />
+                      <div className="sv-image-placeholder">
+                        <Mountain size={42} />
+                        <span>{destination.name}</span>
+                      </div>
                     )}
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
+
+                    <span className="sv-category-badge">
+                      {destination.category || "Destination"}
+                    </span>
+
+                    <div className="sv-saved-indicator">
+                      <BookmarkCheck size={15} />
+                      Saved
+                    </div>
+                  </div>
+
+                  {/* Card details */}
+                  <div className="sv-card-content">
+                    <h3>{destination.name}</h3>
+
+                    <p className="sv-card-description">
+                      {destination.description}
+                    </p>
+
+                    <div className="sv-info-row">
+                      <MapPin size={16} />
+                      <div>
+                        <small>LOCATION</small>
+                        <strong>
+                          {destination.state || "India"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="sv-info-row">
+                      <CalendarDays size={16} />
+                      <div>
+                        <small>BEST TIME TO VISIT</small>
+                        <strong>
+                          {destination.bestTimeToVisit || "Not specified"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="sv-card-actions">
+                      <button
+                        type="button"
+                        className="sv-view-button"
+                        onClick={() =>
+                          navigate(`/destination/${destination._id}`)
+                        }
+                      >
+                        View Details
+                        <ArrowRight size={16} />
+                      </button>
+
+                      <button
+                        type="button"
+                        className="sv-remove-button"
+                        onClick={() => handleRemove(destination._id)}
+                        disabled={isRemoving}
+                        aria-label={`Remove ${destination.name} from saved destinations`}
+                      >
+                        {isRemoving ? (
+                          <Loader2
+                            size={17}
+                            className="sv-spinner"
+                          />
+                        ) : (
+                          <Trash2 size={17} />
+                        )}
+                        <span>
+                          {isRemoving ? "Removing..." : "Remove"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
-        </>
+        </section>
       )}
+
+      <div className="sv-footer">
+        <Compass size={16} />
+        Your wishlist today. Your adventures tomorrow.
+      </div>
     </div>
   );
 };

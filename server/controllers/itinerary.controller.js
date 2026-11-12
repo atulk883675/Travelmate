@@ -4,11 +4,11 @@ import { generateItinerary } from "../services/ai/gemini.service.js";
 import { itinerarySchema } from "../validators/itinerary.validator.js";
 
 // Generate itinerary using Gemini
+
 export const generateTripItinerary = async (req, res) => {
   try {
     const { tripId } = req.params;
 
-    // Validate MongoDB ID
     if (!mongoose.Types.ObjectId.isValid(tripId)) {
       return res.status(400).json({
         success: false,
@@ -16,7 +16,6 @@ export const generateTripItinerary = async (req, res) => {
       });
     }
 
-    // Find trip belonging to logged-in user
     const trip = await Trip.findOne({
       _id: tripId,
       userId: req.user._id
@@ -29,10 +28,13 @@ export const generateTripItinerary = async (req, res) => {
       });
     }
 
-    // Generate itinerary using Gemini
+    // Remember the version of the trip we started with.
+    const originalUpdatedAt = trip.updatedAt;
+
+    // Generate itinerary using Gemini.
     const result = await generateItinerary(trip);
 
-    // Validate Gemini response using Zod
+    // Validate Gemini response.
     const validationResult = itinerarySchema.safeParse(result);
 
     if (!validationResult.success) {
@@ -48,15 +50,36 @@ export const generateTripItinerary = async (req, res) => {
       });
     }
 
-    // Save validated itinerary in MongoDB
-    trip.itinerary = validationResult.data.itinerary;
+    // Update only if the trip has not changed during generation.
+    const updatedTrip = await Trip.findOneAndUpdate(
+      {
+        _id: tripId,
+        userId: req.user._id,
+        updatedAt: originalUpdatedAt
+      },
+      {
+        $set: {
+          itinerary: validationResult.data.itinerary
+        }
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
 
-    await trip.save();
+    if (!updatedTrip) {
+      return res.status(409).json({
+        success: false,
+        message:
+          "This trip was modified while the itinerary was being generated. Please try again."
+      });
+    }
 
     return res.status(200).json({
       success: true,
       message: "Itinerary generated and saved successfully.",
-      itinerary: trip.itinerary
+      itinerary: updatedTrip.itinerary
     });
 
   } catch (error) {
@@ -85,7 +108,8 @@ export const generateTripItinerary = async (req, res) => {
       message: "Failed to generate itinerary."
     });
   }
-}; // This closing brace was missing!
+};
+// This closing brace was missing!
 
 
 // Update existing itinerary

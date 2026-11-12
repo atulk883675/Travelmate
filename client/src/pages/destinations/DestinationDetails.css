@@ -1,0 +1,604 @@
+/* =========================================
+   DESTINATION DETAILS - ADVENTURE DARK THEME
+========================================= */
+
+.dd-page {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 28px 34px 55px;
+  color: #e8eef8;
+  box-sizing: border-box;
+}
+
+.dd-page * {
+  box-sizing: border-box;
+}
+
+/* Back navigation */
+
+.dd-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  padding: 10px 15px;
+  color: #b9c8d9;
+  background: transparent;
+  border: 1px solid #29384d;
+  border-radius: 9px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.dd-back-button:hover {
+  color: #42dbc3;
+  border-color: #27c6ad;
+  background: rgba(39, 198, 173, 0.07);
+}
+
+/* Hero */
+
+.dd-hero {
+  position: relative;
+  min-height: 440px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  margin-bottom: 42px;
+  background: #102638;
+  border: 1px solid #294453;
+  border-radius: 19px;
+}
+
+.dd-hero-image,
+.dd-hero-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dd-hero-image {
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.dd-hero-placeholder {
+  display: grid;
+  place-items: center;
+  color: #4bd9c1;
+  background: linear-gradient(135deg, #173449, #183f43);
+}
+
+.dd-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(5, 15, 25, 0.95) 0%,
+    rgba(5, 15, 25, 0.78) 48%,
+    rgba(5, 15, 25, 0.18) 100%
+  ),
+  linear-gradient(
+    0deg,
+    rgba(5, 15, 25, 0.65),
+    transparent 65%
+  );
+}
+
+.dd-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 750px;
+  padding: 42px;
+}
+
+.dd-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 19px;
+  color: #65e3ce;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.dd-category-badge {
+  display: table;
+  max-width: 100%;
+  padding: 7px 12px;
+  margin-bottom: 12px;
+  color: #a9f3e6;
+  background: rgba(39, 198, 173, 0.12);
+  border: 1px solid rgba(75, 216, 193, 0.4);
+  border-radius: 30px;
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
+.dd-hero h1 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: clamp(36px, 5vw, 54px);
+  font-weight: 850;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.dd-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c1d5df;
+  font-size: 13px;
+}
+
+.dd-location svg {
+  flex-shrink: 0;
+  color: #4bd9c1;
+}
+
+.dd-hero-content > p {
+  max-width: 540px;
+  margin: 17px 0 23px;
+  color: #c0ccd8;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.dd-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+.dd-plan-button,
+.dd-save-button {
+  min-height: 45px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 17px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.dd-plan-button {
+  color: #071a1b;
+  background: #39cbb5;
+  border: 1px solid #39cbb5;
+}
+
+.dd-plan-button:hover {
+  background: #5ae0cb;
+  border-color: #5ae0cb;
+}
+
+.dd-save-button {
+  color: #e7f2f6;
+  background: rgba(10, 28, 40, 0.75);
+  border: 1px solid rgba(220, 240, 245, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.dd-save-button:hover {
+  color: #65e3ce;
+  border-color: #4bd9c1;
+}
+
+.dd-save-button.is-saved {
+  color: #65e3ce;
+  background: rgba(10, 40, 39, 0.85);
+  border-color: #398e82;
+}
+
+.dd-save-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* Section headings */
+
+.dd-overview-section,
+.dd-feature-section {
+  margin-bottom: 39px;
+}
+
+.dd-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.dd-section-kicker {
+  display: inline-flex;
+  align-items: center;
+  color: #4bd9c1;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.dd-section-heading h2 {
+  margin: 8px 0 5px;
+  color: #f0f5fb;
+  font-size: 24px;
+  font-weight: 750;
+}
+
+.dd-section-heading p {
+  margin: 0;
+  color: #91a3b8;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.dd-section-icon {
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: #4bd9c1;
+  background: rgba(39, 198, 173, 0.1);
+  border: 1px solid rgba(39, 198, 173, 0.22);
+  border-radius: 12px;
+}
+
+/* Overview cards */
+
+.dd-overview-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 15px;
+}
+
+.dd-about-card,
+.dd-info-card {
+  min-width: 0;
+  padding: 21px;
+  background: #131f31;
+  border: 1px solid #293a50;
+  border-radius: 13px;
+}
+
+.dd-about-card {
+  grid-row: span 1;
+}
+
+.dd-about-icon,
+.dd-info-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  color: #4bd9c1;
+  background: rgba(39, 198, 173, 0.1);
+  border: 1px solid rgba(39, 198, 173, 0.2);
+  border-radius: 11px;
+}
+
+.dd-about-card h3 {
+  margin: 0 0 10px;
+  color: #eaf2fa;
+  font-size: 16px;
+}
+
+.dd-about-card p {
+  margin: 0;
+  color: #96a9bd;
+  font-size: 13px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
+.dd-info-card > span {
+  display: block;
+  margin-bottom: 9px;
+  color: #8198ad;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.dd-info-card h3 {
+  margin: 0 0 7px;
+  color: #eaf2fa;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.dd-info-card p {
+  margin: 0;
+  color: #96a9bd;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Map, weather and attraction panels */
+
+.dd-feature-panel {
+  min-width: 0;
+  padding: 20px;
+  background: #131f31;
+  border: 1px solid #293a50;
+  border-radius: 14px;
+}
+
+.dd-map-panel {
+  min-height: 320px;
+  overflow: hidden;
+}
+
+.dd-weather-panel {
+  min-height: 120px;
+}
+
+/* Keep embedded components inside their sections */
+.dd-feature-panel > * {
+  max-width: 100%;
+}
+
+/* Bottom CTA */
+
+.dd-bottom-cta {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  padding: 25px;
+  margin-top: 45px;
+  background: linear-gradient(
+    105deg,
+    #102c3a,
+    #124b49
+  );
+  border: 1px solid #2a645e;
+  border-radius: 15px;
+}
+
+.dd-cta-icon {
+  width: 57px;
+  height: 57px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: #4bd9c1;
+  background: rgba(39, 198, 173, 0.12);
+  border: 1px solid rgba(75, 216, 193, 0.3);
+  border-radius: 14px;
+}
+
+.dd-cta-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.dd-cta-content h2 {
+  margin: 0 0 6px;
+  color: #f0f8f7;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.dd-cta-content p {
+  margin: 0;
+  color: #a9c5c4;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.dd-bottom-cta .dd-plan-button {
+  flex-shrink: 0;
+}
+
+/* Loading and error states */
+
+.dd-status {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 35px 20px;
+  text-align: center;
+  background: #131f31;
+  border: 1px solid #293a50;
+  border-radius: 15px;
+}
+
+.dd-status h3 {
+  margin: 13px 0 7px;
+  color: #eaf2fa;
+  font-size: 18px;
+}
+
+.dd-status p {
+  max-width: 440px;
+  margin: 0;
+  color: #91a3b8;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.dd-spinner {
+  color: #49d8c1;
+  animation: dd-spin 0.8s linear infinite;
+}
+
+@keyframes dd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dd-status-icon {
+  width: 61px;
+  height: 61px;
+  display: grid;
+  place-items: center;
+  color: #4bd9c1;
+  background: rgba(39, 198, 173, 0.1);
+  border-radius: 50%;
+}
+
+.dd-error-state {
+  border-color: rgba(220, 70, 70, 0.3);
+}
+
+.dd-primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 19px;
+  padding: 11px 17px;
+  color: #071a1b;
+  background: #39cbb5;
+  border: 1px solid #39cbb5;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.dd-primary-button:hover {
+  background: #5ae0cb;
+}
+
+/* Footer */
+
+.dd-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 23px;
+  color: #71869b;
+  font-size: 12px;
+}
+
+.dd-footer svg {
+  color: #48d8c1;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .dd-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dd-about-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 750px) {
+  .dd-page {
+    padding: 23px 22px 45px;
+  }
+
+  .dd-hero {
+    min-height: 410px;
+  }
+
+  .dd-hero-content {
+    padding: 30px;
+  }
+
+  .dd-overview-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dd-about-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .dd-page {
+    padding: 17px 14px 35px;
+  }
+
+  .dd-hero {
+    min-height: 440px;
+    border-radius: 15px;
+  }
+
+  .dd-hero-overlay {
+    background: linear-gradient(
+      0deg,
+      rgba(5, 15, 25, 0.96) 0%,
+      rgba(5, 15, 25, 0.65) 65%,
+      rgba(5, 15, 25, 0.2) 100%
+    );
+  }
+
+  .dd-hero-content {
+    padding: 23px 19px;
+  }
+
+  .dd-hero h1 {
+    font-size: 35px;
+  }
+
+  .dd-hero-content > p {
+    font-size: 13px;
+  }
+
+  .dd-hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dd-plan-button,
+  .dd-save-button {
+    width: 100%;
+  }
+
+  .dd-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dd-about-card {
+    grid-column: auto;
+  }
+
+  .dd-section-heading h2 {
+    font-size: 21px;
+  }
+
+  .dd-section-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .dd-feature-panel {
+    padding: 12px;
+  }
+
+  .dd-bottom-cta {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .dd-bottom-cta .dd-plan-button {
+    width: 100%;
+  }
+}

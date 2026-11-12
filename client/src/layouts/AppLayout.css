@@ -1,0 +1,536 @@
+/* =========================================
+   TRAVELMATE - GLOBAL APPLICATION LAYOUT
+========================================= */
+
+.app-layout {
+  --app-bg: #0b1120;
+  --sidebar-bg: #101a2c;
+  --surface-bg: #151f32;
+  --surface-hover: #1d2b40;
+  --accent: #27c6ad;
+  --accent-hover: #1eaa94;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: rgba(148, 163, 184, 0.13);
+
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: var(--app-bg);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.app-layout *,
+.app-layout *::before,
+.app-layout *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.app-sidebar {
+  width: 260px;
+  min-width: 260px;
+  flex: 0 0 260px;
+
+  height: 100vh;
+  position: sticky;
+  top: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px 18px 20px;
+
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+
+  z-index: 100;
+  overflow-y: auto;
+}
+
+/* =========================================
+   BRAND
+========================================= */
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 0 8px;
+  margin-bottom: 48px;
+  flex-shrink: 0;
+}
+
+.brand-icon {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(39, 198, 173, 0.13);
+  color: var(--accent);
+
+  border-radius: 13px;
+}
+
+.sidebar-brand h2 {
+  color: var(--text-primary);
+  font-size: 21px;
+  font-weight: 750;
+  margin: 0;
+}
+
+.sidebar-brand span {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 9px;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.sidebar-section-label {
+  padding: 0 12px;
+  margin-bottom: 15px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+
+  color: #64748b;
+}
+
+.sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 13px 14px;
+
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-link.active {
+  color: var(--accent);
+  background: rgba(39, 198, 173, 0.12);
+  border-color: rgba(39, 198, 173, 0.12);
+}
+
+.explore-indicator {
+  margin-left: auto;
+
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* =========================================
+   SIDEBAR DIVIDER
+========================================= */
+
+.sidebar-divider {
+  height: 1px;
+  flex-shrink: 0;
+
+  background: var(--border-color);
+  margin: 28px 0;
+}
+
+/* =========================================
+   ADVENTURE CARD
+========================================= */
+
+.sidebar-adventure-card {
+  padding: 19px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    145deg,
+    #193b49,
+    #172b3d 65%,
+    #172238
+  );
+
+  border: 1px solid rgba(39, 198, 173, 0.16);
+}
+
+.adventure-card-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: var(--accent);
+  background: rgba(39, 198, 173, 0.14);
+
+  margin-bottom: 14px;
+}
+
+.sidebar-adventure-card h3 {
+  font-size: 14px;
+  line-height: 1.5;
+
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.sidebar-adventure-card p {
+  font-size: 12px;
+  line-height: 1.6;
+
+  color: var(--text-secondary);
+
+  margin: 0 0 16px;
+}
+
+.sidebar-adventure-card button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  padding: 10px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: var(--accent);
+  color: #08231f;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sidebar-adventure-card button:hover {
+  background: var(--accent-hover);
+}
+
+/* =========================================
+   SIDEBAR FOOTER
+========================================= */
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-top: auto;
+  padding: 15px 8px 0;
+
+  border-top: 1px solid var(--border-color);
+
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.footer-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(39, 198, 173, 0.5);
+}
+
+/* =========================================
+   MAIN CONTENT WRAPPER
+========================================= */
+
+.app-main-wrapper {
+  flex: 1;
+  min-width: 0;
+  width: calc(100% - 260px);
+
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================
+   TOP NAVIGATION BAR
+========================================= */
+
+.app-topbar {
+  width: 100%;
+  height: 88px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 0 38px;
+
+  background: var(--sidebar-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-heading span {
+  display: block;
+
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 1.7px;
+  font-weight: 700;
+
+  margin-bottom: 5px;
+}
+
+.page-heading h1 {
+  margin: 0;
+
+  color: var(--text-primary);
+  font-size: 21px;
+  font-weight: 650;
+}
+
+/* =========================================
+   CREATE TRIP BUTTON
+========================================= */
+
+.topbar-create-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 11px 17px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: var(--accent);
+  color: #08231f;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.topbar-create-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   MAIN PAGE CONTENT
+========================================= */
+
+.app-main {
+  width: 100%;
+  min-height: calc(100vh - 88px);
+
+  margin: 0;
+  padding: 30px;
+
+  background: var(--app-bg);
+}
+
+/* =========================================
+   MOBILE CONTROLS
+========================================= */
+
+.mobile-menu-button,
+.mobile-close-button,
+.sidebar-overlay {
+  display: none;
+}
+
+/* =========================================
+   TABLET RESPONSIVENESS
+========================================= */
+
+@media (max-width: 900px) {
+  .app-sidebar {
+    width: 235px;
+    min-width: 235px;
+    flex-basis: 235px;
+  }
+
+  .app-main-wrapper {
+    width: calc(100% - 235px);
+  }
+
+  .app-topbar {
+    padding: 0 24px;
+  }
+
+  .app-main {
+    padding: 24px;
+  }
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+========================================= */
+
+@media (max-width: 700px) {
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 270px;
+    min-width: 270px;
+    height: 100dvh;
+
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+
+    z-index: 101;
+  }
+
+  .app-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .app-main-wrapper {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+
+    background: var(--surface-bg);
+    color: var(--text-primary);
+
+    cursor: pointer;
+  }
+
+  .mobile-close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: auto;
+
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+
+    cursor: pointer;
+  }
+
+  .sidebar-overlay {
+    display: block;
+
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    background: rgba(0, 0, 0, 0.65);
+
+    z-index: 100;
+  }
+
+  .app-topbar {
+    height: 76px;
+    padding: 0 16px;
+  }
+
+  .page-heading h1 {
+    font-size: 18px;
+  }
+
+  .topbar-create-button {
+    padding: 10px;
+  }
+
+  .topbar-create-button span {
+    display: none;
+  }
+
+  .app-main {
+    min-height: calc(100vh - 76px);
+    padding: 18px 14px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE SCREENS
+========================================= */
+
+@media (max-width: 380px) {
+  .app-topbar {
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .topbar-left {
+    gap: 9px;
+  }
+
+  .page-heading h1 {
+    font-size: 16px;
+  }
+
+  .page-heading span {
+    font-size: 8px;
+  }
+
+  .app-main {
+    padding: 14px 10px;
+  }
+}

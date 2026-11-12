@@ -6,16 +6,38 @@ export const createTripSchema = z.object({
     .min(2, "Trip title must contain at least 2 characters")
     .max(100, "Trip title cannot exceed 100 characters"),
 
-  destination: z.object({
-    name: z.string()
-      .trim()
-      .min(2, "Destination is required"),
+  
+destination: z.object({
+  destinationId: z.string()
+    .regex(/^[0-9a-fA-F]{24}$/, "Invalid destination ID")
+    .nullable()
+    .optional()
+    .default(null),
 
-    country: z.string()
-      .trim()
-      .optional()
-      .default(""),
-  }),
+  name: z.string()
+    .trim()
+    .min(2, "Destination is required"),
+
+  country: z.string()
+    .trim()
+    .optional()
+    .default(""),
+
+  latitude: z.number()
+    .min(-90)
+    .max(90)
+    .nullable()
+    .optional()
+    .default(null),
+
+  longitude: z.number()
+    .min(-180)
+    .max(180)
+    .nullable()
+    .optional()
+    .default(null),
+}),
+
 
   startingLocation: z.string()
     .trim()

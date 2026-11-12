@@ -8,6 +8,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 
+import AppLayout from "./layouts/AppLayout";
+
 import CreateTrip from "./pages/trips/CreateTrip";
 import TripDetails from "./pages/trips/TripDetails";
 
@@ -18,34 +20,55 @@ import StateDestinations from "./pages/destinations/StateDestinations";
 import SavedDestinations from "./pages/destinations/SavedDestinations";
 import DestinationDetails from "./pages/destinations/DestinationDetails";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Public routes */}
+        {/* Public Routes */}
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
 
-        {/* Protected routes */}
+        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-trip" element={<CreateTrip />} />
-          <Route path="/trips/:tripId" element={<TripDetails />} />
-          <Route path="/explore" element={<DestinationExplorer />} />
-          <Route path="/destinations" element={<StateExplorer />} />
-          <Route path="/destinations/:state" element={<StateDestinations />} />
-          <Route path="/saved-destinations" element={<SavedDestinations />}/>
-          <Route path="/destination/:destinationId" element={<DestinationDetails />} />
+          
+          {/* Shared Application Layout */}
+          <Route element={<AppLayout />}>
+
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            <Route path="/create-trip" element={<CreateTrip />} />
+
+            <Route path="/trips/:tripId" element={<TripDetails />} />
+
+            <Route path="/explore" element={<DestinationExplorer />} />
+
+            <Route path="/destinations" element={<StateExplorer />} />
+
+            <Route
+              path="/destinations/:state"
+              element={<StateDestinations />}
+            />
+
+            <Route
+              path="/saved-destinations"
+              element={<SavedDestinations />}
+            />
+
+            <Route
+              path="/destination/:destinationId"
+              element={<DestinationDetails />}
+            />
+
+          </Route>
         </Route>
 
-        {/* Default route */}
+        {/* Default Route */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        {/* Unknown routes */}
+        {/* Unknown Routes */}
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
@@ -54,4 +77,3 @@ function App() {
 }
 
 export default App;
-

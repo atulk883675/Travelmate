@@ -1,10 +1,10 @@
 import Trip from "../models/Trip.js";
 import mongoose from "mongoose";
+import Destination from "../models/Destination.js";
 
 // Create a new trip
 export const createTrip = async (req, res, next) => {
   try {
-    // Get trip information from the request body
     const {
       title,
       destination,
@@ -16,11 +16,38 @@ export const createTrip = async (req, res, next) => {
       preferences,
     } = req.body;
 
-    // Create trip and associate it with logged-in user
+    let destinationData = destination;
+
+    // If a catalogue destination was selected,
+    // fetch its actual details from MongoDB.
+    if (destination?.destinationId) {
+      const selectedDestination = await Destination.findById(
+        destination.destinationId
+      );
+
+      // Check whether the destination exists.
+      if (!selectedDestination) {
+        return res.status(404).json({
+          success: false,
+          message: "Selected destination not found",
+        });
+      }
+
+      // Use trusted information from the Destination collection.
+      destinationData = {
+        destinationId: selectedDestination._id,
+        name: selectedDestination.name,
+        country: selectedDestination.country,
+        latitude: selectedDestination.latitude,
+        longitude: selectedDestination.longitude,
+      };
+    }
+
+    // Create trip and associate it with logged-in user.
     const trip = await Trip.create({
       userId: req.user._id,
       title,
-      destination,
+      destination: destinationData,
       startingLocation,
       startDate,
       endDate,
@@ -29,7 +56,6 @@ export const createTrip = async (req, res, next) => {
       preferences,
     });
 
-    // Return successful response
     return res.status(201).json({
       success: true,
       message: "Trip created successfully",
@@ -40,6 +66,7 @@ export const createTrip = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // Get all trips belonging to logged-in user
 export const getMyTrips = async (req, res, next) => {

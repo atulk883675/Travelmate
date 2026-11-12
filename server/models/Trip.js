@@ -82,18 +82,32 @@ const tripSchema = new mongoose.Schema(
       maxlength: 100,
     },
 
+    
     destination: {
+      destinationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Destination",
+      default: null
+      },
       name: {
-        type: String,
-        required: true,
-        trim: true,
+      type: String,
+      required: true,
+      trim: true
       },
-
       country: {
-        type: String,
-        default: "",
+      type: String,
+      default: ""
       },
+      latitude: {
+      type: Number,
+      default: null
+      },
+      longitude: {
+       type: Number,
+       default: null
+      }
     },
+
 
     startingLocation: {
       type: String,
